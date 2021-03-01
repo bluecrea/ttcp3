@@ -1,34 +1,32 @@
 <template>
-  <div class="main" :class="!sidebar.opened ? 'isCollapsed' : ''">
-    <side-bar :logo-img="logoImg" />
-    <Header>
-      <i slot="collapsed" class="header-trigger" :class="!sidebar.opened ? 'el-icon-s-unfold' : 'el-icon-s-fold'" @click="handleClickOutside"></i>
-    </Header>
-    <tabsBar/>
-    <div class="tcp-body">
-      <router-view v-if="routerView"/>
-      <Footer/>
-    </div>
-  </div>
+  <el-container style="height: 100vh">
+    <router-view />
+  </el-container>
 </template>
 <script>
 import { mapGetters } from 'vuex'
-import sideBar from '@/components/LeftSider'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import { inject } from 'vue'
 
 export default {
   name: 'BasicLayout',
   components: {
-    sideBar,
-    Header,
-    Footer
+
+  },
+  setup() {
+    const $bus = inject('$bus')
+    //重载所有路由
+    $bus.on('reload-router-view', () => {
+      this.routerView = false
+      this.$nextTick(() => {
+        this.routerView = true
+      })
+    })
   },
   data() {
     return {
       collapsed: false,
       routerView: true,
-      logoImg: require('../assets/logo.png'),
+      logoImg: require('@/assets/logo.png'),
       userInfo: {}
     }
   },
@@ -36,15 +34,6 @@ export default {
     ...mapGetters({
       visitedRoutes: 'tabsBar/visitedRoutes',
       sidebar: 'sideBar/visitedSideBar'
-    })
-  },
-  created() {
-    //重载所有路由
-    this.$baseEventBus.$on('reload-router-view', () => {
-      this.routerView = false
-      this.$nextTick(() => {
-        this.routerView = true
-      })
     })
   },
   mounted () {

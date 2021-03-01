@@ -1,9 +1,3 @@
-/**
- * @author zhenHua.Zhang 858994045@qq.com
- * @description tabsBar多标签页逻辑
- * @date 2020.12.12
- */
-
 const state = () => ({
   visitedRoutes: [],
 })

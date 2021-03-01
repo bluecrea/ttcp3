@@ -50,9 +50,10 @@ import {
   ElRadio,
   ElButtonGroup,
 } from 'element-plus'
+import EventBus from './utils/eventBus'
 
 const app = createApp(App)
-app.config.globalProperties.$ELEMENT = { size: 'mini' }
+const $bus = new EventBus()
 const components = [
   ElAside,
   ElAvatar,
@@ -111,10 +112,13 @@ components.forEach(component => {
 plugins.forEach(plugin => {
   app.use(plugin)
 })
-/*const requireZZHLayouts = require.context('zzh-layout', true, /\.vue$/)
+const requireZZHLayouts = require.context('zzh-layout', true, /\.vue$/)
 requireZZHLayouts.keys().forEach((fileName) => {
   const componentConfig = requireZZHLayouts(fileName)
   const componentName = componentConfig.default.name
   app.component(componentName, componentConfig.default || componentConfig)
-})*/
+})
+
+app.config.globalProperties.$ELEMENT = { size: 'mini' }
+app.provide('$bus', $bus)
 app.mount('#app')
